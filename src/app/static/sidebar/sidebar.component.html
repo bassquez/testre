@@ -1,0 +1,6 @@
+<ng-container *ngFor="let item of navigation">
+    <a mat-list-item *ngIf="item.auth" [routerLink]="[item.link]" routerLinkActive="active">
+        <mat-icon matListIcon>{{item.icon}}</mat-icon>
+      {{item.label}}
+    </a>
+</ng-container>

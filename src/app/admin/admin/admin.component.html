@@ -1,0 +1,13 @@
+<nav mat-tab-nav-bar >
+  <a mat-tab-link
+     *ngFor="let i of admin"
+     [routerLink]="i.link"
+     routerLinkActive #rla="routerLinkActive"
+     [active]="rla.isActive">
+    {{i.label}}
+  </a>
+</nav>
+
+<div [@routeAnimations]="o.isActivated && o.activatedRoute.routeConfig.path" class="container">
+  <router-outlet #o="outlet"></router-outlet>
+</div>

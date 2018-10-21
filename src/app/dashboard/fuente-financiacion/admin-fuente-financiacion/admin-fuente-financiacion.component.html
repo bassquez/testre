@@ -1,0 +1,88 @@
+<gp-toast [message]="toast.message">
+</gp-toast>
+<mat-card class="container">
+  <mat-card-header>
+    <mat-card-title>
+      <h1 matBadge="{{fuentesFinanciacion.length}}" matBadgeOverlap="false">Fuentes de Financiación</h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="table-responsive-sm" *ngIf="!isEditing">
+
+      <table class="table">
+        <thead class="">
+          <tr>
+            <th scope="col">Rubro</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Monto</th>
+            <th scope="col">Vencimiento</th>
+            <th scope="col" matTooltip="Para poder eliminar debes ser Administrador">Actions</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="fuentesFinanciacion.length === 0">
+          <tr>
+            <td colspan="4">There are no add fuentesFinanciacion.</td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr *ngFor="let fuenteFinanciacion of fuentesFinanciacion" [ngSwitch]="fuenteFinanciacion.vencimiento ">
+            <td scope="row">{{fuenteFinanciacion.rubro}}</td>
+            <td scope="row">{{fuenteFinanciacion.nombre | uppercase}}</td>
+            <td scope="row">{{fuenteFinanciacion.monto | currency: 'COP'}}</td>
+            <td scope="row">{{fuenteFinanciacion.vencimiento | date : 'dd MMM yyyy'}}</td>
+            <td scope="row" class="row justify-content-center">
+              <button mat-stroked-button color="accent" (click)="enableEditing(fuenteFinanciacion)">
+                <i class="fa fa-edit"></i> Editar
+              </button>
+              <button mat-stroked-button color="warn" disabled="{{!auth.isAdmin}}" (click)="deleteFuenteF(fuenteFinanciacion)">
+                <i class="fa fa-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="container-fluid" *ngIf="isEditing">
+      <form #form="ngForm" [formGroup]="ffForm" (ngSubmit)="edit(fuenteFinanciacion)" class="form-signin container-fluid">
+        <div class="row justify-content-center align-items-center">
+          <mat-form-field color="accent" class="col" appearance="fill">
+            <mat-label>Identificacion Rubro</mat-label>
+            <input [textMask]="{mask: rubroMask}" [(ngModel)]="fuenteFinanciacion.rubro" #rubroS type="text" matInput placeholder="Identificacion Rubro"
+              nombre="rubro" formControlName="rubro">
+          </mat-form-field>
+        </div>
+        <div class="row justify-content-center align-items-center">
+          <mat-form-field color="accent" class="col" appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input type="text" [(ngModel)]="fuenteFinanciacion.nombre" #nombreS matInput placeholder="Nombre" nombre="nombre" formControlName="nombre">
+          </mat-form-field>
+        </div>
+
+        <div class="row justify-content-center align-items-center">
+          <mat-form-field color="accent" class="col" appearance="fill">
+            <mat-label>Monto</mat-label>
+            <input #montoS type="number" [(ngModel)]="fuenteFinanciacion.monto" matInput nombre="monto" formControlName="monto">
+            <span matPrefix>$&nbsp;</span>
+
+          </mat-form-field>
+        </div>
+        <div class="row justify-content-center align-items-center">
+          <mat-form-field color="accent" class="col" appearance="fill">
+            <mat-label>Fecha de vencimiento de FF</mat-label>
+            <input #vencimientoS matInput [(ngModel)]="fuenteFinanciacion.vencimiento" [matDatepicker]="picker" nombre="vencimiento"
+              formControlName="vencimiento" placeholder="Seleccione una Fecha">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+
+          </mat-form-field>
+        </div>
+        <div class="row justify-content-center align-items-center">
+          <button mat-flat-button type="submit" color="accent" [disabled]="!form.form.valid">Editar</button>
+          <button mat-flat-button type="button" color="warn" (click)="cancelEditing()">
+            <i class="fa fa-times"></i> Cancel</button>
+        </div>
+
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>

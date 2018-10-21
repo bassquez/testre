@@ -1,0 +1,19 @@
+<mat-card class="">
+  <div class="row  align-items-center justify-content-around"  *ngIf="proyect.progreso != 0">
+    <mat-card class="col-1 text-center">
+      {{proyect.startDate | date : 'dd MMM yyyy'}}
+    </mat-card>
+    <div class="col-9">
+      <div class="row align-items-center justify-content-around"><h3>{{proyect.progreso | number : '1.0-0'}} %</h3></div>
+    <mat-progress-bar class="row" mode="determinate" color="warn" value="{{proyect.progreso}}"></mat-progress-bar>
+      
+    </div>
+    <mat-card class="col-1">
+      {{proyect.endDate | date : 'dd MMM yyyy'}}
+    </mat-card>
+  </div>
+  <div class="row align-items-center justify-content-around" *ngIf="proyect.progreso == 0">
+    <h3>El Proyecto Comienza el proximo {{proyect.startDate | date : 'dd MMM yyyy'}}</h3>
+  </div>
+
+</mat-card>

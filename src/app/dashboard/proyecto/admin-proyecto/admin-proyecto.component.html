@@ -1,0 +1,96 @@
+<gp-toast [message]="toast.message"></gp-toast>
+<div *ngIf="proyectos.length > 0">
+  <div class="container-fluid">
+    <div class="row  justify-content-around margen1">
+      <h1 matBadge="{{proyectos.length}}" matBadgeOverlap="false">Proyectos Registrados</h1>
+    </div>
+    <div class="container">
+      <div class="row justify-content-around">
+        <mat-form-field color="accent" class="col-5" appearance="fill">
+          <input matInput [matAutocomplete]="auto" [(ngModel)]="sProyecto" placeholder="Busca Aqui" (keyup)="search($event)" class="search-input"
+          />
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let proyecto of proyectos " [value]="proyecto.identificacion">
+              <span>{{proyecto.identificacion}}</span>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <div class="row justify-content-around">
+        <div class="col margen1" *ngFor="let proyecto of proyectos">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <h4><strong>Proyecto: </strong>{{proyecto.identificacion | uppercase}} </h4>
+              </mat-card-title>
+              <mat-card-subtitle></mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="row">
+                <div class="col">
+                  <dl>
+                    <dt>Inicio:</dt>
+                    <dd>{{proyecto.fechaInicio | date : 'dd MMM yyyy'}}</dd>
+                    <dt>Contratista:</dt>
+                    <dd>{{proyecto.contratista.nombre | uppercase}}</dd>
+
+                  </dl>
+                </div>
+                <div class="col">
+                  <dl>
+                    <dt>Interventor:</dt>
+                    <dd>{{proyecto.interventor.nombre + ' ' + proyecto.interventor.apellido | uppercase}}</dd>
+                    <dt>Terminación:</dt>
+                    <dd>{{proyecto.fechaFin | date : 'dd MMM yyyy' : 'dd MMM yyyy'}}</dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col">
+                  <dt> <h4> <strong>Inversion:</strong></h4> </dt>
+                  <dd>
+                    <h4>{{proyecto.inversion | currency: 'COP'}}</h4>
+                  </dd>
+                </div>
+              </div>
+            </mat-card-content>
+            <mat-card-actions class="justify-content-around">
+              <div class="container">
+                <div class="row">
+                <button mat-raised-button color="" class="col" (click)="openDialogDetalle(proyecto)">
+                  <i class="fa fa-detail"></i> Detalles
+                </button>
+                <button mat-raised-button color="primary" class="col" (click)="openDialogEditar(proyecto)">
+                  <i class="fa fa-edit"></i> Editar
+                </button>
+                <button mat-raised-button color="warn" class="col" disabled="{{!auth.isAdmin}}" (click)="deleteProyecto(proyecto)">
+                  <i class="fa fa-trash"></i> Delete
+                </button>
+                <button mat-raised-button color="accent" class="col" (click)="interventorias(proyecto)">
+                  <i class="fa fa-edit"></i> Interventorias
+                </button>
+                <button mat-raised-button color="primary" class="col" (click)="facturas(proyecto)">
+                  <i class="fa fa-edit"></i> Facturas
+                </button>
+              </div>
+              </div>
+
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div *ngIf="proyectos.length == 0">
+  <div class="container-fluid">
+    <div class="row  justify-content-around margen1">
+      <h1>No hay proyectos Agregados</h1>
+    </div>
+    <div class="row  justify-content-around margen1">
+      <button mat-raised-button [routerLink]="['../add-proyecto']" routerLinkActive="router-link-active">Agregar Proyectos</button>
+    </div>
+  </div>
+</div>

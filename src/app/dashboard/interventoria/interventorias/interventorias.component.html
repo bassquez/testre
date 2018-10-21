@@ -1,0 +1,169 @@
+<gp-toast [message]="toast.message"></gp-toast>
+<div class="container">
+
+  <div class="row justify-content-around container">
+    <div class="col justify-content-around text-center margen1">
+      <h1><strong>Proyecto: {{_proyecto.identificacion | uppercase}}</strong></h1>
+      <h2>Interventor: {{_proyecto.interventor.nombre + ' ' + _proyecto.interventor.apellido | uppercase }}</h2>
+    </div>
+  </div>
+  <div class="row justify-content-around container" *ngIf="!isEditing">
+    <button mat-stroked-button *ngIf="auth.currentUser.identificacion === _proyecto.interventor.identificacion " (click)="interventoria(_proyecto)">Agregar
+      Informe
+      <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+    </button>
+  </div>
+  <div class="row justify-content-around" *ngIf="!isEditing">
+    <div class="col-4 text-truncate margen1" *ngFor="let interventoria of interventorias">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title><strong>
+              <h3>Informe</h3>
+            </strong></mat-card-title>
+          <mat-card-subtitle></mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <dl>
+                  <dt>Fecha:</dt>
+                  <dd>{{interventoria.fechaCreacion | date : 'dd MMM yyyy'}}</dd>
+                  <dt>Tipo de Informe:</dt>
+                  <dd>{{ interventoria.tipoinforme | uppercase }}</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button (click)="openDialogDetalle(interventoria)">Ver</button>
+          <button mat-raised-button color="warn" (click)="borrarInterventoria(interventoria)">Eliminar</button>
+          <button mat-raised-button color="primary" (click)="enableEditing(interventoria)">Editar</button>
+
+        </mat-card-actions>
+      </mat-card>
+
+
+    </div>
+  </div>
+  <mat-card *ngIf="isEditing">
+    <mat-card-content>
+      <div class="container-fluid">
+        <div class="row justify-content-center align-items-center">
+          <section class="example-section" *ngIf="facturasPorInterventoria.length > 0">
+            <div class="table-responsive-md col">
+              <table class="table mat-elevation-z1">
+                <thead class="">
+                  <tr>
+                    <th scope="col">Identificación</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Accion</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr scope="row" *ngFor="let factura of facturasPorInterventoria">
+                    <td>
+                      {{factura.factura.identificacion}}
+                    </td>
+                    <td>
+                      {{factura.factura.fecha | date}}
+                    </td>
+                    <td>
+                      {{factura.factura.valor | currency: 'COP'}}
+                    </td>
+                    <td>
+                      <button mat-stroked-button color="warn" (click)="deleteFacturaInterventoria(factura)">
+                        <i class="fa fa-trash"></i> Delete
+                      </button>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+          </section>
+        </div>
+        <div class="row justify-content-center align-items-center">
+          <section *ngIf="facturasPorProyecto.length === 0">
+            <h2>No hay facturas para Avalar</h2>
+          </section>
+
+          <section class="example-section" *ngIf="facturasPorProyecto.length > 0">
+            <div class="table-responsive-md col">
+              <table class="table mat-elevation-z1">
+                <thead class="">
+                  <tr>
+                    <th scope="col">
+                      <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                      </mat-checkbox>
+                    </th>
+                    <th scope="col">Identificación</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Valor</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr scope="row" *ngFor="let factura of facturasPorProyecto">
+                    <td>
+                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(factura) : null"
+                        [checked]="selection.isSelected(factura)">
+                      </mat-checkbox>
+                    </td>
+                    <td>
+                      {{factura.identificacion}}
+                    </td>
+                    <td>
+                      {{factura.fecha | date}}
+                    </td>
+                    <td>
+                      {{factura.valor | currency: 'COP'}}
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+          </section>
+        </div>
+
+        <form #form="ngForm" [formGroup]="interventoriaForm" (ngSubmit)="edit(_interventoria)" class="form-signin container-fluid">
+
+          <input placeholder="" type="hidden" [(value)]="_proyecto" [(ngModel)]="_proyecto" formControlName="proyecto">
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Tipo Informe</mat-label>
+              <mat-select #tipoplazo [(value)]="tipoinforme" [(ngModel)]="_interventoria.tipoinforme" formControlName="tipoinforme">
+                <mat-option>None</mat-option>
+                <mat-option value="parcial">Parcial</mat-option>
+                <mat-option value="final">Final</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="row justify-content-center align-items-center">
+            <div class="col-12">
+              <textarea [froalaEditor]="optionsEditor" [(ngModel)]="_interventoria.informe" formControlName="informe"></textarea>
+
+            </div>
+          </div>
+
+          <div class="row justify-content-center align-items-center">
+            <button mat-flat-button type="submit" color="accent" [disabled]="!form.form.valid">Editar</button>
+            <button mat-flat-button type="button" color="warn" (click)="cancelEditing()">
+              <i class="fa fa-times"></i> Cancel</button>
+          </div>
+
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

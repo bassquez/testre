@@ -1,18 +1,46 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule, LOCALE_ID } from '@angular/core';
+
+import { SharedModule } from '@app/shared';
+import { CoreModule } from '@app/core';
+
+import { SettingsModule } from './settings';
+import { StaticModule } from './static';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { MomentModule } from 'angular2-moment';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/es-CO';
+
+// the second parameter 'fr' is optional
+registerLocaleData(localeFr, 'es-CO');
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
   imports: [
+    // angular
+    BrowserAnimationsModule,
     BrowserModule,
-    AppRoutingModule
+
+    // core & shared
+    CoreModule,
+    SharedModule,
+
+    // features
+    StaticModule,
+    SettingsModule,
+
+    // app
+    AppRoutingModule,
+
+    MomentModule
+
   ],
-  providers: [],
+  declarations: [AppComponent],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es-CO' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

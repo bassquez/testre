@@ -1,0 +1,10 @@
+@import '~@angular/material/theming';
+
+@mixin gp-login-component-theme($theme) {
+  $primary: map-get($theme, primary);
+  .bg{
+    color: mat-color($primary, default-contrast);
+    background-color: mat-color($primary);
+  }
+
+}

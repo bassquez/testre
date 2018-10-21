@@ -1,0 +1,8 @@
+<div  *ngIf="message.body" id="toast-container" class="toast-bottom-right" aria-live="polite" role="alert">
+  <div class="toast toast-{{message.type}}" style="display: block;">
+    <div class="toast-progress"></div>
+    <div class="toast-message">
+      <strong>Message:</strong> {{message.body}}
+    </div>
+  </div>
+</div>

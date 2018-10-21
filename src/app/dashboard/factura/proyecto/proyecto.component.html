@@ -1,0 +1,26 @@
+<div class="container-fluid">
+  <div class="row justify-content-around">
+    <mat-form-field color="accent" class="col-5" appearance="fill">
+      <input matInput [matAutocomplete]="auto" [(ngModel)]="sProyecto" placeholder="Busca Aqui" (keyup)="search()" class="search-input" />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let proyecto of proyectos " [value]="proyecto.identificacion">
+          <span>{{proyecto.identificacion}}</span>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div class="row justify-content-around">
+    <div class="col-4">
+      <mat-nav-list>
+        <mat-list-item *ngFor="let proyecto of proyectos" (click)="factura(proyecto)">
+          <mat-icon class="lista" mat-list-icon>assessment</mat-icon>
+          <h1 class="lista" mat-line><strong>Proyecto: </strong>{{proyecto.identificacion | uppercase}}</h1>
+          <p class="lista" mat-line> <strong>Contratista: </strong>{{proyecto.contratista.nombre | uppercase}} </p>
+          <p class="lista" mat-line> <strong>Terminación: </strong>{{proyecto.fechaFin | date : 'dd MMM yyyy'}} </p>
+          <p class="lista" mat-line> <strong>Interventor: </strong>{{proyecto.interventor.nombre + ' ' +proyecto.interventor.apellido
+            | uppercase}} </p>
+        </mat-list-item>
+      </mat-nav-list>
+    </div>
+  </div>
+</div>

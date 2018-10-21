@@ -1,0 +1,5 @@
+$gp-primary: mat-palette($mat-light-blue, 600, 50, 900);
+$gp-accent: mat-palette($mat-grey,600);
+$gp-warn: mat-palette($mat-pink, 600);
+
+$gp-theme: mat-light-theme($gp-primary, $gp-accent, $gp-warn);

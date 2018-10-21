@@ -1,0 +1,84 @@
+<gp-toast [message]="toast.message"></gp-toast>
+<div class="container-fluid ">
+  <div class="row justify-content-center ">
+    <mat-card class="col-12 col-md-8">
+      <form [formGroup]="registerForm" (ngSubmit)="register()" class="form-signin container-fluid">
+        <mat-card-header class="row">
+          <mat-card-title class="col-12">Registro de Usuario</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="row container-fluid">
+
+          <div class="row justify-content-center align-items-center">
+            <i class="material-icons">face</i>
+            <mat-form-field color="accent" [ngClass]="setClassUsername()" class="col" appearance="fill">
+              <mat-label>username</mat-label>
+              <input type="text" matInput name="username" formControlName="username" disabled [ngModel]= "nombre.value + '.' + apellido.value | lowercase">
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <i class="material-icons">email</i>
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Email</mat-label>
+              <input type="text" matInput placeholder="Email" name="email" formControlName="email" />
+              <mat-error *ngIf="email.invalid">{{correoErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Identificación</mat-label>
+              <input type="text" matInput placeholder="Identificacion" name="identificacion" formControlName="identificacion" />
+              <mat-error *ngIf="identificacion.invalid">{{identificacionErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Nombre</mat-label>
+              <input type="text" matInput placeholder="Nombre" name="nombre" formControlName="nombre" />
+              <mat-error *ngIf="nombre.invalid">{{nombreErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Apellido</mat-label>
+              <input type="text" matInput placeholder="Apellido" name="apellido" formControlName="apellido" />
+              <mat-error *ngIf="apellido.invalid">{{apellidoErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Cargo</mat-label>
+              <input type="text" matInput placeholder="Cargo" name="cargo" formControlName="cargo" />
+              <mat-error *ngIf="cargo.invalid">{{cargoErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <i class="material-icons">supervisor_account</i>
+            <mat-form-field class="col" appearance="fill">
+              <mat-label>Rol</mat-label>
+              <mat-select [(value)]="role" name="role" placeholder="Rol" formControlName="role">
+                <mat-option>None</mat-option>
+                <mat-option value="admin">Admin</mat-option>
+                <mat-option value="user">User</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <i class="material-icons">lock_outline</i>
+            <mat-form-field class="col" appearance="fill">
+              <mat-label>Contraseña</mat-label>
+              <input matInput id="password" 
+              [type]="!hide ? 'password' : 'text'"
+               name="password" formControlName="password" placeholder="Password">
+              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              <mat-error *ngIf="password.invalid">{{passErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="row ">
+          <button mat-flat-button type="submit" [disabled]="!registerForm.valid">Agregar</button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+
+  </div>
+</div>

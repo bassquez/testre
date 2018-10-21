@@ -1,0 +1,45 @@
+<gp-toast [message]="toast.message"></gp-toast>
+<div class="container-fluid ">
+  <div class="row justify-content-center ">
+    <mat-card class="col-12 col-md-8">
+      <form [formGroup]="contratistaForm" (ngSubmit)="edit(contratista)" class="form-signin container-fluid">
+        <mat-card-header class="row">
+          <mat-card-title class="col-12">
+            <h1>Editar de contratista {{contratista.nombre}} </h1>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="row container-fluid">
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Tipo de Identificacion</mat-label>
+              <mat-select nombre="tipoId" formControlName="tipoId" [(ngModel)]="contratista.tipoId">
+                <mat-option value="cc">CC</mat-option>
+                <mat-option value="nit">NIT</mat-option>
+              </mat-select>
+              <mat-error *ngIf="tipoId.invalid">{{tipoIdErrorMessage()}}
+              </mat-error>
+
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Identificacion</mat-label>
+              <input #rubroS [(ngModel)]="contratista.identificacion" type="text" matInput placeholder="Identificacion" nombre="identificacion" formControlName="identificacion">
+              <mat-error *ngIf="identificacion.invalid">{{identificacionErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Nombre</mat-label>
+              <input type="text" #nombreS matInput [(ngModel)]="contratista.nombre" placeholder="Nombre" nombre="nombre" formControlName="nombre">
+              <mat-error *ngIf="nombre.invalid">{{nameErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="row ">
+          <button mat-flat-button type="submit" [disabled]="!contratistaForm.valid">Editar</button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </div>
+</div>

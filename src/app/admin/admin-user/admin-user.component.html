@@ -1,0 +1,149 @@
+<gp-toast [message]="toast.message"></gp-toast>
+<mat-card class="container">
+  <mat-card-header>
+    <mat-card-title>
+      <h1 matBadge="{{users.length}}">Usuarios Registrados</h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="table-responsive-sm" *ngIf="!isEditing">
+
+      <table class="table">
+        <thead class="">
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="users.length === 0">
+          <tr>
+            <td colspan="4">
+              <h1>There are no registered users.</h1>
+            </td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.role}}</td>
+            <td>
+              <button mat-raised-button (click)="enableEditing(user)">
+                <i class="fa fa-trash"></i> Editar
+              </button>
+              <button mat-raised-button color="warn" (click)="deleteUser(user)" [disabled]="auth.currentUser._id === user._id">
+                <i class="fa fa-trash"></i> Borrar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row" *ngIf="isEditing">
+      <form #form="ngForm" [formGroup]="editForm" (ngSubmit)="edit(user)" class="form-signin container-fluid">
+        <mat-card-header class="row">
+          <mat-card-title class="col-12">Registro de Usuario</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="row container-fluid">
+
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>username</mat-label>
+              <input type="text" matInput name="username" formControlName="username" disabled [ngModel]="nombre.value + '.' + apellido.value | lowercase">
+            </mat-form-field>
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Email</mat-label>
+              <input type="text" matInput [(ngModel)]="user.email" placeholder="Email" name="email" formControlName="email" />
+              <mat-error *ngIf="email.invalid">{{correoErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Identificación</mat-label>
+              <input type="text" [(ngModel)]="user.identificacion" matInput placeholder="Identificacion" name="identificacion"
+                formControlName="identificacion" />
+              <mat-error *ngIf="identificacion.invalid">{{identificacionErrorMessage()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Nombre</mat-label>
+              <input type="text" matInput [(ngModel)]="user.nombre" placeholder="Nombre" name="nombre" formControlName="nombre" />
+              <mat-error *ngIf="nombre.invalid">{{nombreErrorMessage()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Apellido</mat-label>
+              <input type="text" matInput [(ngModel)]="user.apellido" placeholder="Apellido" name="apellido"
+                formControlName="apellido" />
+              <mat-error *ngIf="apellido.invalid">{{apellidoErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-label>Cargo</mat-label>
+              <input type="text" matInput [(ngModel)]="user.cargo" placeholder="Cargo" name="cargo" formControlName="cargo" />
+              <mat-error *ngIf="cargo.invalid">{{cargoErrorMessage()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col" appearance="fill">
+                <mat-label>Rol</mat-label>
+                <mat-select [(value)]="role" [(ngModel)]="user.role" name="role" placeholder="Rol" formControlName="role">
+                  <mat-option>None</mat-option>
+                  <mat-option value="admin">Admin</mat-option>
+                  <mat-option value="user">User</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="col" appearance="fill">
+                  <mat-label>Contraseña</mat-label>
+                  <input matInput id="password" [type]="!hide ? 'password' : 'text'" name="password" formControlName="password"
+                    placeholder="Password">
+                  <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                  <mat-error *ngIf="password.invalid">{{passErrorMessage()}}</mat-error>
+                </mat-form-field>
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="row ">
+          <div class="row justify-content-center align-items-center">
+            <button mat-flat-button type="submit" color="accent" [disabled]="!form.form.valid">Editar</button>
+            <button mat-flat-button type="button" color="warn" (click)="cancelEditing()">
+              <i class="fa fa-times"></i> Cancel</button>
+          </div>
+        </mat-card-actions>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+<!--
+<div class="card" *ngIf="!isLoading">
+  <h4 class="card-header">Registered users ({{users.length}})</h4>
+  <div class="card-body">
+    <table class="table table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Username</th>
+          <th scope="col">Email</th>
+          <th scope="col">Role</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="users.length === 0">
+        <tr>
+          <td colspan="4">There are no registered users.</td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{user.username}}</td>
+          <td>{{user.email}}</td>
+          <td>{{user.role}}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" (click)="deleteUser(user)" [disabled]="auth.currentUser._id === user._id">
+              <i class="fa fa-trash"></i> Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->

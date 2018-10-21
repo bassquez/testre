@@ -1,0 +1,95 @@
+<gp-toast [message]="toast.message"></gp-toast>
+<mat-card class="col-12 col-md-8 container-fluid" *ngIf="auth.currentUser?.identificacion === _proyecto.interventor?.identificacion">
+  <form [formGroup]="interventoriaForm" (ngSubmit)="agregarInterventoria()">
+
+    <mat-card-header>
+      <mat-card-title>
+        <h1>Proyecto {{id | uppercase}}</h1>
+        <h2>{{_proyecto.fechaFin | date : 'dd MMM yyyy'}}</h2>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <input placeholder="" type="hidden" [(value)]="_proyecto" [(ngModel)]="_proyecto" formControlName="proyecto">
+      <div class="row justify-content-center align-items-center">
+        <mat-form-field color="accent" class="col" appearance="fill">
+          <mat-label>Tipo Informe</mat-label>
+          <mat-select #tipoplazo [(value)]="tipoinforme" formControlName="tipoinforme">
+            <mat-option>None</mat-option>
+            <mat-option value="parcial">Parcial</mat-option>
+            <mat-option value="final">Final</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="row justify-content-center align-items-center">
+        <section *ngIf="facturasPorProyecto.length === 0">
+          <h2>No hay facturas para Avalar</h2>
+        </section>
+        <section class="example-section" *ngIf="facturasPorProyecto.length > 0">
+          <div class="table-responsive-md col">
+            <table class="table mat-elevation-z1">
+              <thead class="">
+                <tr>
+                  <th scope="col" >
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                  [checked]="selection.hasValue() && isAllSelected()"
+                                  [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                  </th>
+                  <th scope="col">Identificación</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Valor</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr scope="row" *ngFor="let factura of facturasPorProyecto">
+                  <td>
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                  (change)="$event ? selection.toggle(factura) : null"
+                                  [checked]="selection.isSelected(factura)">
+                    </mat-checkbox>
+                  </td>
+                  <td>
+                    {{factura.identificacion}}
+                  </td>
+                  <td>
+                    {{factura.fecha | date}}
+                  </td>
+                  <td>
+                    {{factura.valor | currency: 'COP'}}
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          
+        </section>
+      </div>
+      <div class="row justify-content-center align-items-center">
+        <div class="col-12">
+          <textarea [froalaEditor]="optionsEditor" formControlName="informe"></textarea>
+
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-flat-button [disabled]="!interventoriaForm.valid">Guardar Interventoria</button>
+
+    </mat-card-actions>
+  </form>
+
+
+</mat-card>
+
+<mat-card class="col-12 col-md-8 container-fluid" *ngIf="auth.currentUser?.identificacion !== _proyecto.interventor?.identificacion">
+  <mat-card-content>
+    <h2>
+      No Eres el interventor de éste proyecto, Contactate con el interventor:
+      <strong>
+        {{_proyecto.interventor.nombre + ' ' + _proyecto.interventor.apellido }}
+      </strong>
+    </h2>
+  </mat-card-content>
+</mat-card>

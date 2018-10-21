@@ -1,0 +1,15 @@
+<mat-toolbar *ngIf="router.url != '/dashboard/home'" color="accent">
+  <div class="row  justify-content-around">
+    <div class="col">
+      <button mat-icon-button>
+        <mat-icon (click)="goToHome()">home</mat-icon>
+      </button>
+    </div>
+    <div class="col" *ngFor="let i of navigationDashboard">
+      <button mat-button matLine  [routerLink]="i.link" routerLinkActive #rla="routerLinkActive"><mat-icon> {{i.icon}} </mat-icon>{{i.label}}</button>
+    </div>
+  </div>
+</mat-toolbar>
+<div [@routeAnimations]="o.isActivated && o.activatedRoute.routeConfig.path">
+  <router-outlet #o="outlet"></router-outlet>
+</div>

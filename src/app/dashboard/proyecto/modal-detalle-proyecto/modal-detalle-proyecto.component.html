@@ -1,0 +1,143 @@
+<h1 mat-dialog-title></h1>
+<div mat-dialog-content>
+  <div class="container-fluid align-items-center justify-content-around">
+    <div class="row align-items-center justify-content-around">
+      <h1>Identificación:
+        <strong>{{data.proyecto.identificacion | uppercase}}</strong>
+      </h1>
+    </div>
+    <dl class="row container">
+      <dt class="col-2">Objeto: </dt>
+      <dd class="col-10 container">{{data.proyecto.objeto | uppercase }}</dd>
+      <dt class="col-2">Contratista: </dt>
+      <dd class="col-10 container">{{_proyecto.contratista?.nombre | uppercase}}</dd>
+      <dt class="col-2">Interventor: </dt>
+      <dd class="col-10 container">{{_proyecto.interventor?.nombre + ' ' + _proyecto.interventor?.apellido |
+        uppercase}}</dd>
+    </dl>
+    <div *ngIf="verComponenteFuentes" class="row">
+      <div class="col-12">
+        <gp-proyecto-fuente [id]="_proyecto.identificacion"></gp-proyecto-fuente>
+      </div>
+      <div class="row align-items-center justify-content-around">
+        <button mat-flat-button (click)="editarFuentes(false)">Editar Fuentes</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="container-fluid" *ngIf="!verComponenteFuentes">
+    <gp-progress-bar [proyect]="proyecto"></gp-progress-bar>
+    <br>
+  </div>
+  <div class="row">
+    <div class="col text-justify" *ngIf="_proyecto.inversion - inversionTotal === 0">
+      <div class="row align-items-center justify-content-center">
+        <span>Inversion Total</span>
+      </div>
+      <div class="row align-items-center justify-content-center">
+        <h2>{{_proyecto.inversion | currency: 'COP'}}</h2>
+      </div>
+    </div>
+    <div class="col text-justify" *ngIf="_proyecto.inversion - inversionTotal === 0">
+      <div class="row align-items-center justify-content-center">
+        <span>Ejecución Total</span>
+      </div>
+      <div class="row align-items-center justify-content-center">
+        <h2>{{facturaValor | currency: 'COP'}}</h2>
+      </div>
+    </div>
+    <div class="col text-justify" *ngIf="_proyecto.inversion - inversionTotal === 0">
+      <div class="row align-items-center justify-content-center">
+        <span>% Ejecución Total</span>
+      </div>
+      <div class="row align-items-center justify-content-center">
+        <h2>{{facturaValor / _proyecto.inversion | percent}}</h2>
+      </div>
+    </div>
+
+    <div class="col text-justify" *ngIf="_proyecto.inversion - inversionTotal !== 0">
+      <div class="row text-justify justify-content-center">
+        <h2>Hace falta
+          <strong>{{_proyecto.inversion - inversionTotal | currency: 'COP'}}</strong> de inversion por fuentes
+        </h2>
+      </div>
+      <div class="row align-items-center justify-content-center">
+        <div class="col">
+          <div class="row align-items-center justify-content-center">
+            <span>Inversion Total del proyecto</span>
+          </div>
+          <div class="row align-items-center justify-content-center">
+            <h3>{{_proyecto.inversion | currency: 'COP'}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="row align-items-center justify-content-center">
+        <div class="col">
+          <div class="row align-items-center justify-content-center">
+            <span>Inversion Total de fuentes</span>
+          </div>
+          <div class="row align-items-center justify-content-center">
+            <h3>{{inversionTotal | currency: 'COP'}}</h3>
+            <h3>{{facturaValor | currency: 'COP'}} ssaas</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="row align-items-center justify-content-around">
+
+
+    <div class="table-responsive-md col">
+
+      <table class="table mat-elevation-z1">
+        <thead class="">
+          <tr>
+            <th scope="col">Fuente de Financiacion</th>
+            <th scope="col">Inversion</th>
+            <th scope="col">%</th>
+            <th scope="col">Facturas</th>
+            <th scope="col">Facturas Total</th>
+            <th scope="col">% Ejecutado</th>
+          </tr>
+
+        </thead>
+        <tbody *ngIf="fuentesPorProyecto.length === 0">
+
+          <tr>
+            <td colspan="4">No se han agregado Fuentes Financiación.</td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr *ngFor="let fs of facturasPorFuente">
+            <td class="align-middle" scope="row">{{fs.fuente.fuenteProyecto.nombre}}</td>
+            <td class="align-middle" scope="row">{{fs.fuente.inversion | currency: 'COP'}}</td>
+            <td class="align-middle" scope="row">{{fs.fuente.inversion / _proyecto.inversion | percent}}</td>
+            <td class="align-middle" scope="row" *ngIf="fs.facturas.length > 0">
+
+              <mat-list>
+                <mat-list-item *ngFor="let f of fs.facturas">
+                  <h4 mat-line><strong>Identificación: </strong>{{f.identificacion | uppercase}}</h4>
+                  <p mat-line><strong>Valor: </strong>{{f.valor | currency: 'COP'}} </p>
+                  <p mat-line><strong>Fecha: </strong>{{f.fecha | date : 'dd MMM yyyy'}} </p>
+                  <p mat-line *ngIf="f.avalado === true"><strong>Avalado: </strong>Si </p>
+                  <p mat-line *ngIf="f.avalado === false"><strong>Avalado: </strong>No </p>
+
+
+                </mat-list-item>
+              </mat-list>
+            </td>
+            <td class="align-middle" scope="row" *ngIf="fs.facturas.length === 0">No hay Facturas para esta Fuente</td>
+            <td class="align-middle" scope="row">{{fs.totalFacturas | currency: 'COP'}}</td>
+            <td class="align-middle" scope="row">{{fs.totalFacturas / fs.fuente.fuenteProyecto.monto | percent}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row">
+        <button mat-flat-button (click)="editarFuentes(_proyecto)" [mat-dialog-close] color="accent">Editar Fuentes</button>
+      </div>
+      <div class="row align-items-center justify-content-center" *ngIf="auth.currentUser.identificacion === _proyecto.interventor?.identificacion">
+        <button mat-raised-button color="accent" (click)="interventoria()" [mat-dialog-close]>Generar Informe de
+          Interventoría</button>
+      </div>
+    </div>

@@ -1,0 +1,111 @@
+<gp-toast [message]="toast.message"></gp-toast>
+<mat-card>
+  <mat-card-header class="row">
+    <mat-card-title class="col-12">
+      <h1>Proyecto {{identificaionS.value}}</h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="row container-fluid">
+    <form [formGroup]="proyectoForm" (ngSubmit)="register()" class="form-signin container-fluid">
+
+      <div class="row justify-content-center align-items-center">
+        <mat-form-field color="accent" class="col" appearance="fill">
+          <mat-select placeholder="Contratista" nombre="contratista" formControlName="contratista">
+            <mat-option *ngFor="let contratista of contratistas" [value]="contratista">
+              {{contratista.nombre}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="row justify-content-center align-items-center">
+        <mat-form-field color="accent" class="col" appearance="fill">
+          <mat-label>Identificacion del Proyecto</mat-label>
+          <input #identificaionS type="text" matInput placeholder="Identificacion" nombre="identificacion" formControlName="identificacion">
+          <mat-error *ngIf="identificacion.invalid">{{identificacionErrorMessage()}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row justify-content-center align-items-center">
+        <mat-form-field color="accent" class="col" appearance="fill">
+          <mat-label>Objeto</mat-label>
+          <textarea matInput nombre="objeto" formControlName="objeto" cols="30" rows="10"></textarea>
+          <mat-error *ngIf="objeto.invalid">{{objetoErrorMessage()}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row justify-content-center align-items-center">
+        <mat-form-field color="accent" class="col" appearance="fill">
+          <mat-label>Plazo</mat-label>
+          <input #plazoS type="number" matInput placeholder="Plazo" nombre="plazo" formControlName="plazo">
+          <mat-error *ngIf="plazo.invalid">{{plazoErrorMessage()}}</mat-error>
+
+        </mat-form-field>
+        <mat-form-field color="accent" class="col" appearance="fill">
+          <mat-label>Tipo Plazo</mat-label>
+          <mat-select #tipoplazo [(value)]="selected" formControlName="tipoPlazo">
+            <mat-option>None</mat-option>
+            <mat-option value="days">Dias</mat-option>
+            <mat-option value="months">Meses</mat-option>
+            <mat-option value="years">Años</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="row justify-content-center align-items-center">
+        <mat-form-field color="accent" class="col" appearance="fill">
+          <mat-label>Fecha de inicio</mat-label>
+          <input #fechaInicioS matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" nombre="fechaInicio" formControlName="fechaInicio"
+            placeholder="Seleccione una Fecha">
+          <mat-error *ngIf="fechaInicio.invalid">{{fechaInicioErrorMessage()}}</mat-error>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="row justify-content-center align-items-center" *ngIf="!((fechaInicio.value | amAdd: plazoS.value : tipoplazo.value | amDateFormat: 'MM/DD/YYYY') == 'Invalid date')">
+        <mat-form-field color="accent" class="col" appearance="fill">
+          <mat-label>Fecha de Fin</mat-label>
+          <input #fechaFinS matInput [ngModel]="fechaInicio.value | amAdd: plazoS.value : tipoplazo.value | amDateFormat: 'MM/DD/YYYY'"
+            nombre="fechaFin" formControlName="fechaFin">
+        </mat-form-field>
+      </div>
+      <div class="row justify-content-center align-items-center">
+        <mat-form-field color="accent" class="col" appearance="fill">
+          <mat-label>Inversion</mat-label>
+          <input #Inversion type="number" matInput placeholder="Plazo" nombre="inversion" formControlName="inversion">
+          <mat-error *ngIf="inversion.invalid">{{inversionErrorMessage()}}</mat-error>
+
+        </mat-form-field>
+       
+      </div>
+      <button mat-flat-button type="submit" [disabled]="!proyectoForm.valid">Agregar</button>
+    </form>
+
+    <button mat-raised-button (click)="openDialog()">Pick one</button>
+<!-- 
+    <div class="table-responsive-md">
+      
+      <table class="table">
+        <thead class="">
+          <tr>
+            <th scope="col">Fuente de Financiacion</th>
+            <th scope="col">Inversion</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="fuentes.length === 0">
+          <tr>
+            <td colspan="4">There are no add Fuentes.</td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr *ngFor="let fuente of fuentes">
+            <td scope="row">{{fuente.fuenteProyecto.nombre}}</td>
+            <td scope="row">{{fuente.inversion | currency: 'COP'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>{{suma |  currency: 'COP'}}</h3> -->
+  </mat-card-content>
+  <mat-card-actions class="row ">
+   
+  </mat-card-actions>
+</mat-card>

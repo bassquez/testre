@@ -1,1 +1,54 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'styles-variables';
+
+@import '../node_modules/bootstrap/scss/bootstrap-reboot';
+@import '../node_modules/bootstrap/scss/bootstrap-grid';
+@import '../node_modules/@fortawesome/fontawesome-free-webfonts/scss/fontawesome';
+@import '../node_modules/@fortawesome/fontawesome-free-webfonts/scss/fa-solid';
+@import '../node_modules/@fortawesome/fontawesome-free-webfonts/scss/fa-brands';
+
+@import 'styles-reset';
+
+@import '../node_modules/@angular/material/theming';
+
+@include mat-core();
+
+@import 'themes/default-theme.scss';
+@import 'themes/light-theme.scss';
+@import 'themes/black-theme.scss';
+@import 'themes/nature-theme.scss';
+
+@import 'styles-reset.scss-theme';
+@import 'app/app.component.scss-theme';
+@import 'app/static/about/about.component.scss-theme';
+@import 'app/static/login/login.component.scss-theme';
+@import 'app/dashboard/dashboard.component.scss-theme';
+@import 'app/dashboard/interventoria/modal-interventoria/modal-interventoria.component.scss-theme';
+
+@mixin custom-components-theme($theme) {
+  @include gp-styles-reset-theme($theme);
+  @include gp-app-component-theme($theme);
+  @include gp-about-component-theme($theme);
+  @include gp-login-component-theme($theme);
+  @include gp-dashboard-component-theme($theme);
+  @include gp-interventoria-component-theme($theme);
+}
+
+.default-theme {
+  @include angular-material-theme($gp-theme);
+  @include custom-components-theme($gp-theme);
+}
+
+.light-theme {
+  @include angular-material-theme($gp-light-theme);
+  @include custom-components-theme($gp-light-theme);
+}
+
+.black-theme {
+  @include angular-material-theme($gp-black-theme);
+  @include custom-components-theme($gp-black-theme);
+}
+
+.nature-theme {
+  @include angular-material-theme($gp-nature-theme);
+  @include custom-components-theme($gp-nature-theme);
+}

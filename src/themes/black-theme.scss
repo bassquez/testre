@@ -1,0 +1,9 @@
+$gp-black-primary: mat-palette($mat-grey, 700, 300, 900);
+$gp-black-accent: mat-palette($mat-amber, A200, A100, A400);
+$gp-black-warn: mat-palette($mat-red, 500);
+
+$gp-black-theme: mat-dark-theme(
+  $gp-black-primary,
+  $gp-black-accent,
+  $gp-black-warn
+);

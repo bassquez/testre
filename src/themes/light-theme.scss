@@ -1,0 +1,9 @@
+$gp-light-primary: mat-palette($mat-grey, 600, 50, 900);
+$gp-light-accent:  mat-palette($mat-light-blue, A200, A100, A400);
+$gp-light-warn: mat-palette($mat-deep-orange, 400);
+
+$gp-light-theme: mat-light-theme(
+  $gp-light-primary,
+  $gp-light-accent,
+  $gp-light-warn
+);

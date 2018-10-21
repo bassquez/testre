@@ -1,0 +1,35 @@
+<button mat-icon-button routerLink="/settings" class="col justify-content-end align-items-center">
+  <mat-icon>settings</mat-icon>
+</button>
+<gp-toast [message]="toast.message"></gp-toast>
+<div class="container-fluid ">
+  <div class="row justify-content-center vertical-center">
+    <mat-card class="col-auto col-md-4">
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <mat-card-header>
+          <mat-card-title>Login</mat-card-title>
+          <mat-card-subtitle>Ingrese Usuario y contraseña</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row container-fluid">
+            <mat-form-field color="accent" class="col">
+              <input type="text" matInput placeholder="Email" name="email" formControlName="email" />
+              <mat-error *ngIf="email.invalid">{{correoErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row container-fluid">
+            <mat-form-field class="col">
+              <input matInput [type]="!hide ? 'password' : 'text'" name="password" formControlName="password" placeholder="Contraseña">
+              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              <mat-error *ngIf="password.invalid">{{passErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row container-fluid">
+            <button mat-flat-button type="submit" [disabled]="!loginForm.valid">Iniciar Sección</button>
+          </div>
+        </mat-card-content>
+       
+      </form>
+    </mat-card>
+  </div>
+</div>

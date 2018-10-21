@@ -1,0 +1,129 @@
+<gp-toast [message]="toast.message"></gp-toast>
+<div class="container">
+  <mat-card>
+    <mat-card-header class="row">
+      <mat-card-title class="col-12">
+          <h1>Proyecto {{_proyecto.identificacion | uppercase}}</h1>
+
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="row container-fluid">
+      <section class="row align-items-center justify-content-around">
+        <form [formGroup]="facturasForm" (ngSubmit)="addFactura()" class="form-signin container-fluid">
+          <div class="row justify-content-center align-items-center">
+            <div class="col">
+              <mat-form-field color="accent" class="col" appearance="fill">
+                <mat-select placeholder="Proyectos" [compareWith]="compareFn" hidden name="proyecto" [(value)]="_proyecto"
+                  [disabled]="_proyecto.inversion !== 0" (ngModelChange)="getFacturasPorProyecto()" formControlName="proyecto">
+                  <mat-option *ngFor="let proyecto of proyectos" [value]="proyecto">
+                    {{proyecto.identificacion}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+
+          <div class="row justify-content-center align-items-center">
+            <mat-form-field class="col" color="accent" appearance="fill">
+              <mat-label>Fecha de factura</mat-label>
+              <input #fechaInicioS matInput [matDatepicker]="picker" nombre="fecha" formControlName="fecha" placeholder="Choose a date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <mat-select placeholder="Fuentes de Financiacion" [(ngModel)]="fuente" name="fuenteFinanciacion"
+                formControlName="fuenteFinanciacion">
+                <mat-option *ngFor="let fuente of fuentesPorProyecto" [value]="fuente.fuenteProyecto">
+                  {{fuente.fuenteProyecto.nombre}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <input matInput placeholder="Identificacion" value="" formControlName="identificacion">
+            </mat-form-field>
+            <mat-form-field color="accent" class="col" appearance="fill">
+              <input matInput placeholder="Valor" value="" formControlName="valor">
+            </mat-form-field>
+          </div>
+
+          <div>
+            <button mat-flat-button [disabled]="!facturasForm.valid">Agregar Factura</button>
+          </div>
+        </form>
+      </section>
+      <div class="row align-items-center justify-content-around">
+        <div class="table-responsive-md col">
+          <table class="table mat-elevation-z5" *ngIf="!isEditing">
+            <thead class="">
+              <tr>
+                <th scope="col">Fuente de Financiacion</th>
+                <th scope="col">Inversion</th>
+                <th scope="col">Faltante por ejecutar</th>
+                <th scope="col">Facturas</th>
+                <th scope="col">Facturas Total</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="fuentesPorProyecto.length === 0">
+              <tr>
+                <td colspan="4">No se han agregado Fuentes Financiación.</td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr *ngFor="let fs of facturasPorFuente">
+                <td class="align-middle" scope="row">{{fs.fuente.fuenteProyecto.nombre}}</td>
+                <td class="align-middle" scope="row">{{fs.fuente.inversion | currency: 'COP'}}</td>
+                <td class="align-middle" scope="row">{{fs.fuente.inversion - fs.totalFacturas | currency: 'COP' }}</td>
+                <td class="align-middle" scope="row" *ngIf="fs.facturas.length > 0">
+                  <mat-list>
+                    <mat-list-item *ngFor="let f of fs.facturas">
+                      <h4 mat-line><strong>Identificación: </strong>{{f.identificacion | uppercase}}</h4>
+                      <p mat-line><strong>Valor: </strong>{{f.valor | currency: 'COP'}} </p>
+                      <p mat-line><strong>Fecha: </strong>{{f.fecha | date : 'dd MMM yyyy'}} </p>
+
+                      <div class="col">
+                        <button mat-stroked-button color="warn" class="row" (click)="deleteFactura(f)">
+                          <i class="fa fa-trash"></i> Delete
+                        </button>
+                        <button mat-stroked-button color="" class="row" (click)="enableEditing(f)">
+                          <i class="fa fa-edit"></i> Editar
+                        </button>
+                      </div>
+                    </mat-list-item>
+                  </mat-list>
+                </td>
+                <td class="align-middle" scope="row" *ngIf="fs.facturas.length === 0">No hay Facturas para esta Fuente</td>
+                <td class="align-middle" scope="row">{{fs.totalFacturas | currency: 'COP'}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="container-fluid" *ngIf="isEditing">
+        <form #form="ngForm" (ngSubmit)="editFactura(factura)" class="form-signin container-fluid">
+          <div class="row justify-content-center align-items-center">
+            <div class="col">{{factura.identificacion}}</div>
+            <div class="col">{{factura.fuenteFinanciacion.nombre}}</div>
+            <div class="col">
+              <mat-checkbox [(ngModel)]="factura.avalado" [ngModelOptions]="{standalone: true}">Avalado?</mat-checkbox>
+            </div>
+            <div class="col">
+              <mat-form-field color="accent" class="col" appearance="fill">
+                <mat-label>Valor</mat-label>
+                <input type="number" matInput placeholder="Valor" required [(ngModel)]="factura.valor" [ngModelOptions]="{standalone: true}">
+              </mat-form-field>
+            </div>
+
+            <div class="col">
+              <button mat-flat-button type="submit" color="accent" [disabled]="!form.form.valid">Editar</button>
+              <button mat-flat-button type="button" color="warn" (click)="cancelEditing()">
+                <i class="fa fa-times"></i> Cancel</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
