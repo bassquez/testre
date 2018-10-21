@@ -1,1 +1,1 @@
-web: npm run dev
+web: ng build --aot --prod && tsc -p server && node dist/server/app.js
