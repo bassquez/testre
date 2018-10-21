@@ -22,6 +22,7 @@
     "lint": "ng lint",
     "lintbe": "tslint server/**/**.ts{,x}",
     "e2e": "ng e2e",
+    "preinstall": "npm install -g http-server",
     "postinstall": "ng build --aot --prod && tsc -p server && node dist/server/app.js"
   },
   "private": true,
